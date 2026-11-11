@@ -10,19 +10,104 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.sp
+
+
 import org.jetbrains.compose.resources.painterResource
 
 import composestarter.shared.generated.resources.Res
 import composestarter.shared.generated.resources.compose_multiplatform
 
+
+@Composable
+fun Adder(){
+    var counter = remember{ mutableStateOf(0)}
+    Column{
+        Button(onClick = {counter.value++}){
+            Text("Add one")
+        }
+        Text("Counter = "+ counter.value.toString(),fontSize = 34.sp,color = Color.Red)
+    }
+}
+
+@Composable
+fun Converter(){
+    val numstate = remember{ mutableStateOf("0")}
+    Column{
+        OutlinedTextField(value = numstate.value,onValueChange = {
+            numstate.value = it
+        },label = {Text("In feet :")}, singleLine = true)
+        Text("In meters :"+((numstate.value.toDoubleOrNull()?:(0.0))*0.305).toString())
+    }
+}
+
+@Composable
+fun Login(){
+    val passstate = remember{ mutableStateOf("")}
+    val usestate = remember{ mutableStateOf("")}
+    val instate = remember{ mutableStateOf(false)}
+    Column{
+
+        if(instate.value){
+            Text("Logged in as alex")
+            Button(onClick = {
+                instate.value = false
+
+            }){
+                Text("Login Out")
+            }
+        }
+        else{
+            OutlinedTextField(value = usestate.value,onValueChange ={
+                usestate.value = it
+            },label = {Text("Username")}, singleLine = true)
+
+            OutlinedTextField(value = passstate.value,onValueChange ={
+                passstate.value = it
+            }, visualTransformation = PasswordVisualTransformation(),label = {Text("Password")}, singleLine = true)
+            Button(onClick = {
+                if(passstate.value == "password"&&usestate.value == "alex"){
+                    instate.value = true
+                }
+            }){
+                Text("Login")
+            }
+        }
+
+
+
+    }
+}
+
+
 @Composable
 @Preview
 fun App() {
     MaterialTheme {
-        Text("Hello World!")
+        val nameState = remember { mutableStateOf("") }
+        Column {
+            Text(text = "Enter your favourite programming language:",fontSize = 24.sp)
+            OutlinedTextField(value = nameState.value, onValueChange = {
+                nameState.value = it
+            }, singleLine = true)
+            Text("Your favourite programming language is "+nameState.value,fontSize = 24.sp)
+            Adder()
+            Converter()
+            Login()
+        }
+
     }
 }
