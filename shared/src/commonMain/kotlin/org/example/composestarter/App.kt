@@ -50,7 +50,13 @@ fun Converter(){
         OutlinedTextField(value = numstate.value,onValueChange = {
             numstate.value = it
         },label = {Text("In feet :")}, singleLine = true)
-        Text("In meters :"+((numstate.value.toDoubleOrNull()?:(0.0))*0.305).toString())
+        if((numstate.value.toDoubleOrNull()?:("er"))!="er"){
+            Text("In meters :"+((numstate.value.toDoubleOrNull()?:(0.0))*0.305).toString())
+        }
+        else{
+            Text("Error You Have Entered Something Wrong",fontSize = 60.sp,color = Color.Red)
+        }
+
     }
 }
 
@@ -59,6 +65,9 @@ fun Login(){
     val passstate = remember{ mutableStateOf("")}
     val usestate = remember{ mutableStateOf("")}
     val instate = remember{ mutableStateOf(false)}
+    val passwordstate = remember{ mutableStateOf("password")}
+    val changer : (String) -> Unit = {passwordstate.value = it}
+    val erstate = remember{ mutableStateOf("")}
     Column{
 
         if(instate.value){
@@ -69,6 +78,7 @@ fun Login(){
             }){
                 Text("Login Out")
             }
+            ChangePassword(changer)
         }
         else{
             OutlinedTextField(value = usestate.value,onValueChange ={
@@ -79,16 +89,38 @@ fun Login(){
                 passstate.value = it
             }, visualTransformation = PasswordVisualTransformation(),label = {Text("Password")}, singleLine = true)
             Button(onClick = {
-                if(passstate.value == "password"&&usestate.value == "alex"){
+                if(passstate.value == passwordstate.value&&usestate.value == "alex"){
                     instate.value = true
+                    erstate.value = ""
+                }
+                else{
+                    erstate.value = "error wrong password or username"
                 }
             }){
                 Text("Login")
             }
+            Text(text = erstate.value,color = Color.Red)
         }
 
 
 
+    }
+
+}
+
+@Composable
+fun ChangePassword(changer:(String) -> Unit){
+    val newpassstate = remember{ mutableStateOf("")}
+    Column{
+        Text("\n\nChange password here")
+        OutlinedTextField(value = newpassstate.value,onValueChange ={
+            newpassstate.value = it
+        }, visualTransformation = PasswordVisualTransformation(),label = {Text("New Password")}, singleLine = true)
+        Button(onClick = {
+            changer(newpassstate.value)
+        }){
+            Text("Submit")
+        }
     }
 }
 
