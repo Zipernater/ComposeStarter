@@ -78,7 +78,8 @@ fun Login(){
             }){
                 Text("Login Out")
             }
-            ChangePassword(changer)
+            //ChangePassword(changer)
+            ChangePassword { passwordstate.value = it }
         }
         else{
             OutlinedTextField(value = usestate.value,onValueChange ={
